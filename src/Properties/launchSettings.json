@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Pinger": {
+      "commandName": "Project",
+      "commandLineArgs": "WILDERDECK WILDERDECK"
+    }
+  }
+}
