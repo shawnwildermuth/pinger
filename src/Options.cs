@@ -14,11 +14,14 @@ namespace Pinger
     [Value(0, MetaName = "first", Required = true, HelpText = "Starting IP Address (or DNS Name)")]
     public string FirstAddress { get; set; }
 
-    [Value(1, MetaName = "last",  Required = true, HelpText = "Ending IP Address (or DNS Name)")]
+    [Value(1, MetaName = "last",  Required = false, HelpText = "Ending IP Address (or DNS Name)")]
     public string LastAddress { get; set; }
 
     [Option('r', "repeats", Required = false, HelpText = "Number of times to repeat the pings")]
     public int Repeats { get; set; } = 1;
+
+    [Option('l', "lookup", Required = false, HelpText = "Lookup DNS Names of IP Addresses")]
+    public bool Lookup { get; set; } = false;
 
     [Usage(ApplicationAlias = "pinger")]
     public static IEnumerable<Example> Examples
@@ -31,7 +34,5 @@ namespace Pinger
         };
       }
     }
-
-
   }
 }

@@ -18,23 +18,28 @@ namespace Pinger
           Console.WriteLine("Copyright(C) 2020 Wilder Minds LLC");
           Console.WriteLine();
 
-          Host.CreateDefaultBuilder()
-            .ConfigureServices((b, c) =>
-            {
-              c.AddSingleton(options);
-              c.AddHostedService<PingerService>();
-            })
-            .ConfigureLogging(bldr =>
-            {
-              bldr.ClearProviders();
-              bldr.AddConsole()
-                .SetMinimumLevel(LogLevel.Error);
-            })
-            .RunConsoleAsync();
+          Run(options);
         });
       
 
     }
 
+    private static void Run(Options options)
+    {
+
+      Host.CreateDefaultBuilder()
+        .ConfigureServices((b, c) =>
+        {
+          c.AddSingleton(options);
+          c.AddHostedService<PingerService>();
+        })
+        .ConfigureLogging(bldr =>
+        {
+          bldr.ClearProviders();
+          bldr.AddConsole()
+            .SetMinimumLevel(LogLevel.Error);
+        })
+        .RunConsoleAsync();
+    }
   }
 }

@@ -47,7 +47,7 @@ namespace Pinger
     void DoPingRange(CancellationToken cancellationToken)
     {
       var first = GetIPAddress(_options.FirstAddress);
-      var last = GetIPAddress(_options.LastAddress);
+      var last = string.IsNullOrWhiteSpace(_options.LastAddress) ? first : GetIPAddress(_options.LastAddress);
 
       var range = new IPAddressRange(first, last);
 
@@ -68,7 +68,7 @@ namespace Pinger
     /// <param name="addr">The Address to Ping</param>
     void DoPing(IPAddress addr)
     {
-      string name = FormatAddress(addr);
+      string name = _options.Lookup ? FormatAddress(addr) : $"{addr}";
 
       for (int repeat = 1; repeat <= _options.Repeats; ++repeat)
       {

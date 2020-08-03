@@ -5,7 +5,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>Shawn WIldermuth</Authors>
     <Company>Wilder Minds LLC</Company>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
+    <Version>2.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
