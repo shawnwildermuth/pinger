@@ -27,9 +27,7 @@ namespace Pinger
     {
       try
       {
-
         DoPingRange(cancellationToken);
-
       }
       catch (Exception ex)
       {
