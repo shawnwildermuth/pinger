@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,16 +19,16 @@ namespace Pinger
           Console.WriteLine("Copyright(C) 2020 Wilder Minds LLC");
           Console.WriteLine();
 
-          Run(options);
+          Run(options).Wait();
         });
       
 
     }
 
-    private static void Run(Options options)
+    private static Task Run(Options options)
     {
 
-      Host.CreateDefaultBuilder()
+      return Host.CreateDefaultBuilder()
         .ConfigureServices((b, c) =>
         {
           c.AddSingleton(options);
