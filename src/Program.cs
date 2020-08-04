@@ -24,19 +24,20 @@ namespace Pinger
 
         private static async Task RunAsync(Options options)
         {
-            await Host.CreateDefaultBuilder()
+
+            return Host.CreateDefaultBuilder()
               .ConfigureServices((b, c) =>
               {
-                  c.AddSingleton(options);
-                  c.AddHostedService<PingerService>();
+                c.AddSingleton(options);
+                c.AddHostedService<PingerService>();
               })
               .ConfigureLogging(bldr =>
               {
                   bldr.ClearProviders();
                   bldr.AddConsole()
-              .SetMinimumLevel(LogLevel.Error);
+                   .SetMinimumLevel(LogLevel.Error);
               })
-              .RunConsoleAsync();
+              .RunConsoleAsync().Wait();
         }
     }
 }
