@@ -1,46 +1,43 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommandLine;
-using CommandLine.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Pinger
 {
-  class Program
-  {
-    static void Main(string[] args)
+    class Program
     {
-      Parser.Default.ParseArguments<Options>(args)
-        .WithParsed(options =>
+        static async Task Main(string[] args)
         {
-          Console.WriteLine($"Pinger");
-          Console.WriteLine("Copyright(C) 2020 Wilder Minds LLC");
-          Console.WriteLine();
+            await Parser.Default.ParseArguments<Options>(args)
+              .WithParsedAsync(async options =>
+              {
+                  Console.WriteLine($"Pinger");
+                  Console.WriteLine("Copyright(C) 2020 Wilder Minds LLC");
+                  Console.WriteLine();
 
-          Run(options).Wait();
-        });
-      
+                  await RunAsync(options);
+              });
+        }
 
+        private static async Task RunAsync(Options options)
+        {
+
+            return Host.CreateDefaultBuilder()
+              .ConfigureServices((b, c) =>
+              {
+                c.AddSingleton(options);
+                c.AddHostedService<PingerService>();
+              })
+              .ConfigureLogging(bldr =>
+              {
+                  bldr.ClearProviders();
+                  bldr.AddConsole()
+                   .SetMinimumLevel(LogLevel.Error);
+              })
+              .RunConsoleAsync().Wait();
+        }
     }
-
-    private static Task Run(Options options)
-    {
-
-      return Host.CreateDefaultBuilder()
-        .ConfigureServices((b, c) =>
-        {
-          c.AddSingleton(options);
-          c.AddHostedService<PingerService>();
-        })
-        .ConfigureLogging(bldr =>
-        {
-          bldr.ClearProviders();
-          bldr.AddConsole()
-            .SetMinimumLevel(LogLevel.Error);
-        })
-        .RunConsoleAsync();
-    }
-  }
 }
