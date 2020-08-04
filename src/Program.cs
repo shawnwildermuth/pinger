@@ -7,37 +7,35 @@ using Microsoft.Extensions.Logging;
 
 namespace Pinger
 {
-    class Program
+  class Program
+  {
+    static void Main(string[] args)
     {
-        static async Task Main(string[] args)
+      Parser.Default.ParseArguments<Options>(args)
+        .WithParsed(options =>
         {
-            await Parser.Default.ParseArguments<Options>(args)
-              .WithParsedAsync(async options =>
-              {
-                  Console.WriteLine($"Pinger");
-                  Console.WriteLine("Copyright(C) 2020 Wilder Minds LLC");
-                  Console.WriteLine();
+          Console.WriteLine($"Pinger");
+          Console.WriteLine("Copyright(C) 2020 Wilder Minds LLC");
+          Console.WriteLine();
 
-                  await RunAsync(options);
-              });
-        }
+          var host = Host.CreateDefaultBuilder()
+            .ConfigureServices((b, c) =>
+            {
+              c.AddSingleton(options);
+            })
+            .ConfigureLogging(bldr =>
+            {
+              bldr.ClearProviders();
+              bldr.AddConsole()
+                .SetMinimumLevel(LogLevel.Error);
+            })
+            .Build();
 
-        private static async Task RunAsync(Options options)
-        {
+          var svc = ActivatorUtilities.CreateInstance<PingerService>(host.Services);
+          svc.Run();
 
-            return Host.CreateDefaultBuilder()
-              .ConfigureServices((b, c) =>
-              {
-                c.AddSingleton(options);
-                c.AddHostedService<PingerService>();
-              })
-              .ConfigureLogging(bldr =>
-              {
-                  bldr.ClearProviders();
-                  bldr.AddConsole()
-                   .SetMinimumLevel(LogLevel.Error);
-              })
-              .RunConsoleAsync().Wait();
-        }
+        });
     }
+
+  }
 }

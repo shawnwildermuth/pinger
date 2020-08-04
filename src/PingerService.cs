@@ -10,7 +10,7 @@ using NetTools;
 
 namespace Pinger
 {
-  internal class PingerService : IHostedService
+  internal class PingerService
   {
     private readonly ILogger<PingerService> _logger;
     private readonly Options _options;
@@ -23,39 +23,24 @@ namespace Pinger
       _ping = new Ping();
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public void Run()
     {
       try
       {
-        DoPingRange(cancellationToken);
+        var first = GetIPAddress(_options.FirstAddress);
+        var last = string.IsNullOrWhiteSpace(_options.LastAddress) ? first : GetIPAddress(_options.LastAddress);
+
+        var range = new IPAddressRange(first, last);
+
+        foreach (var addr in range)
+        {
+          DoPing(addr);
+        }
       }
       catch (Exception ex)
       {
         Console.WriteLine();
         _logger.LogError($"Error while pinging: {ex}");
-      }
-      return Task.CompletedTask;
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-      return Task.CompletedTask;
-    }
-
-    void DoPingRange(CancellationToken cancellationToken)
-    {
-      var first = GetIPAddress(_options.FirstAddress);
-      var last = string.IsNullOrWhiteSpace(_options.LastAddress) ? first : GetIPAddress(_options.LastAddress);
-
-      var range = new IPAddressRange(first, last);
-
-      foreach (var addr in range)
-      {
-        if (cancellationToken.IsCancellationRequested)
-        {
-          return;
-        }
-        DoPing(addr);
       }
 
     }
